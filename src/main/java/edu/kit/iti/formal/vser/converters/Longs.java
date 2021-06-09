@@ -15,6 +15,7 @@ public final class Longs {
       @ ensures array.length * BYTE_SIZE == \result.length;
       @ ensures (\forall int k; 0 <= k && k < array.length; deserializeArray(\result)[k] == array[k]);
       @ ensures \fresh(\result);
+      @ accessible array[*];
       @ assignable \nothing;
       @*/
     public static /*@pure@*/ byte[] serializeArray(long[] array) {
@@ -38,6 +39,7 @@ public final class Longs {
       @ ensures bytes.length / BYTE_SIZE == \result.length;
       @ ensures (\forall int i; 0 <= i && i < \result.length; deserialize(ArrayUtils.subArray(bytes, i * BYTE_SIZE, BYTE_SIZE)) == \result[i]);
       @ ensures \fresh(\result);
+      @ accessible bytes[*];
       @ assignable \nothing;
       @*/
     public static /*@pure@*/ long[] deserializeArray(byte[] bytes) {
@@ -67,7 +69,6 @@ public final class Longs {
 
     /*@ public normal_behavior
       @
-      @ requires bytes != null;
       @ requires bytes.length == BYTE_SIZE;
       @ ensures \result == Long_KeY.fromBytes(bytes);
       @ assignable \strictly_nothing;
@@ -78,6 +79,7 @@ public final class Longs {
 
     /*@ public normal_behavior
       @
+      @ ensures \result == Integers.BYTE_SIZE + longs.length * BYTE_SIZE;
       @ assignable \strictly_nothing;
       @*/
     public static /*@strictly_pure@*/ int byteSize(long[] longs) {

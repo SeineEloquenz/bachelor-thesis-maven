@@ -13,7 +13,7 @@ public final class Integers {
     /*@ public normal_behavior
       @
       @ ensures array.length * BYTE_SIZE == \result.length;
-      @ ensures (\forall int k; 0 <= k && k < array.length; deserialize(ArrayUtils.subArray(\result, k * BYTE_SIZE, BYTE_SIZE)) == array[k]);
+      @ ensures (\forall int k; 0 <= k && k < array.length; deserializeArray(\result)[k] == array[k]);
       @ ensures \fresh(\result);
       @ accessible array[*];
       @ assignable \nothing;
@@ -37,7 +37,7 @@ public final class Integers {
       @ requires bytes.length % BYTE_SIZE == 0;
       @
       @ ensures bytes.length / BYTE_SIZE == \result.length;
-      @ ensures (\forall int i; 0 <= i && i < \result.length; deserializeM(seqSub(\dl_array2seq(bytes), (i * BYTE_SIZE), (i * BYTE_SIZE + BYTE_SIZE))) == \result[i]);
+      @ ensures (\forall int i; 0 <= i && i < \result.length; deserialize(ArrayUtils.subArray(bytes, i * BYTE_SIZE, BYTE_SIZE)) == \result[i]);
       @ ensures \fresh(\result);
       @ accessible bytes[*];
       @ assignable \nothing;
@@ -46,7 +46,7 @@ public final class Integers {
         int[] tmp = new int[bytes.length / BYTE_SIZE];
         /*@
           @ maintaining 0 <= i && i <= tmp.length;
-          @ maintaining (\forall int j; 0 <= j && j < i; deserializeM(seqSub(\dl_array2seq(bytes), (j * BYTE_SIZE), (j * BYTE_SIZE + BYTE_SIZE))) == tmp[j]);
+          @ maintaining (\forall int j; 0 <= j && j < i; deserialize(ArrayUtils.subArray(bytes, j * BYTE_SIZE, BYTE_SIZE)) == tmp[j]);
           @ assignable tmp[*];
           @ decreasing tmp.length - i;
           @*/
@@ -58,10 +58,9 @@ public final class Integers {
 
     /*@ public normal_behavior
       @
-      @ ensures \result.length == BYTE_SIZE;
-      @ ensures value == deserialize(\result);
-      @ ensures \fresh(\result);
-      @ accessible value;
+      @ ensures \result.length == BYTE_SIZE;    //(S1)
+      @ ensures value == deserialize(\result);  //(S2)
+      @ ensures \fresh(\result);                //(S3)
       @ assignable \nothing;
       @*/
     public static /*@pure@*/ byte[] serialize(int value) {
@@ -69,32 +68,9 @@ public final class Integers {
     }
 
     /*@ public normal_behavior
+      @
       @ requires bytes.length == BYTE_SIZE;
-      @
-      @ ensures \result == Integer_KeY.fromBytes(seq2array(bytes));
-      @ assignable \strictly_nothing;
-      @ public static model int deserializeM(\seq bytes);
-      @
-      @*/
-
-    /*@ public normal_behavior
-      @ ensures \dl_array2seq(\result) == seq;
-      @ public static model byte[] seq2array(\seq seq);
-      @*/
-
-    /*@ public normal_behavior
-      @ ensures \result == seq[first..(first + len)];
-      @ public static model \seq seqSub(\seq seq, int first, int len);
-      @*/
-
-
-
-    /*@ public normal_behavior
-      @
-      @ requires bytes != null;
-      @ requires bytes.length == BYTE_SIZE;
-      @ ensures \result == Integer_KeY.fromBytes(bytes);
-      @ accessible bytes[*];
+      @ ensures \result == Integer_KeY.fromBytes(bytes);    //(D)
       @ assignable \strictly_nothing;
       @*/
     public static /*@strictly_pure@*/ int deserialize(byte[] bytes) {
@@ -103,6 +79,7 @@ public final class Integers {
 
     /*@ public normal_behavior
       @
+      @ ensures \result == Integers.BYTE_SIZE + integers.length * BYTE_SIZE;
       @ assignable \strictly_nothing;
       @*/
     public static /*@strictly_pure@*/ int byteSize(int[] integers) {

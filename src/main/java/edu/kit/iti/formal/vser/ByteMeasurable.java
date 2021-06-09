@@ -2,18 +2,18 @@ package edu.kit.iti.formal.vser;
 
 public interface ByteMeasurable {
 
-    //@ public instance model int BYTE_SIZE;
+    //@ public instance model int byteSize;
 
     /*@ public normal_behavior
       @
-      @ ensures \result == (\sum int i; 0 <= i && i < measurables.length; measurables[i].byteSize());
+      @ ensures \result == (\sum int i; 0 <= i && i < measurables.length; measurables[i].byteSize);
       @ assignable \strictly_nothing;
       @*/
     public static int /*@strictly_pure@*/ byteSize(ByteMeasurable[] measurables) {
         int result = 0;
         /*@
           @ maintaining 0 <= \index && \index < measurables.length;
-          @ maintaining result == (\sum int j; 0 <= j && j < \index; measurables[\index].byteSize());
+          @ maintaining result == (\sum int j; 0 <= j && j < \index; measurables[\index].byteSize);
           @ decreasing measurables.length - \index;
           @ assignable result;
           @*/
@@ -24,7 +24,7 @@ public interface ByteMeasurable {
     }
 
     /*@ public normal_behavior
-      @ ensures \result == BYTE_SIZE;
+      @ ensures \result == byteSize;
       @ assignable \strictly_nothing;
       @*/
     public int /*@strictly_pure@*/ byteSize();

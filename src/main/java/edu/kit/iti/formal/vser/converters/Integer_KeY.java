@@ -27,7 +27,6 @@ final class Integer_KeY {
       @ requires bytes != null; //JJBMC does not assume all parameters to be non-null by default like KeY, so we need to specify the precondition explicitly
       @ requires bytes.length == 4;
       @ ensures \result == fromBytes(bytes);
-      @ accessible bytes[*];
       @ assignable \strictly_nothing;
       @*/
     static /*@pure@*/ int fromBytes(byte[] bytes) {

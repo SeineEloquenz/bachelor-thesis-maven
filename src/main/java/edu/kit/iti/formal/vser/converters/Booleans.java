@@ -8,13 +8,6 @@ public final class Booleans {
         //Utility class
     }
 
-    /*@ private normal_behavior
-      @ ensures (\forall int k; 0 <= k && k < bool.length; \result[k] == bool[k]);
-      @*/
-    private static boolean[] verifyBoolSer(boolean[] bool) {
-        return deserializeArray(serializeArray(bool));
-    }
-
     /*@ public normal_behavior
       @
       @ ensures array.length == \result.length;
@@ -59,21 +52,18 @@ public final class Booleans {
 
     /*@ public normal_behavior
       @
-      @ ensures deserialize(\result) == bool;
-      @ ensures bool <==> \result == 1;
+      @ ensures deserialize(\result) == bool;   //(S1)
+      @ ensures bool <==> \result == 1;         //(S2)
       @ assignable \strictly_nothing;
       @*/
     public static /*@strictly_pure@*/ byte serialize(boolean bool) {
-        if (bool) {
-            return 1;
-        } else {
-            return 0;
-        }
+        if (bool)   return 1;
+        else        return 0;
     }
 
     /*@ public normal_behavior
       @
-      @ ensures \result <==> (boolRepr == 1);
+      @ ensures \result <==> (boolRepr == 1);   //(D)
       @ assignable \strictly_nothing;
       @*/
     public static /*@strictly_pure@*/ boolean deserialize(byte boolRepr) {
@@ -82,6 +72,7 @@ public final class Booleans {
 
     /*@ public normal_behavior
       @
+      @ ensures \result == Integers.BYTE_SIZE + booleans.length;
       @ assignable \strictly_nothing;
       @*/
     public static /*@strictly_pure@*/ int byteSize(boolean[] booleans) {
